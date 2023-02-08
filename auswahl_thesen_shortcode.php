@@ -23,14 +23,23 @@
 if (!defined('WPINC'))
     die;
 
+add_shortcode('luther-thesen-auswahl', 'luther_thesen_auswahl_func');
 
-function luther_thesen_auswahl_func($atts) {
-	$Content = "<style>\r\n";
-	$Content .= "h3.demoClass {\r\n";
-	$Content .= "color: #26b158;\r\n";
-	$Content .= "}\r\n";
-	$Content .= "</style>\r\n";
-	$Content .= '<h3 class="demoClass">Check it out!</h3>';
+
+function luther_thesen_auswahl_func( $atts ) {
+	
+// extract shortcode attributes
+extract( shortcode_atts( array(
+        'loesungszahl' => 1,
+	'entwicklungszahl' => 1,
+	'beziehungszahl' => 1,
+	'schluesselzahl' => 1,
+	'geistigezahl' => 1,
+	'psychezahl' => 1,
+	'koerperzahl' => 1,
+	'materiezahl' => 1,
+	'zusatzzahl' => 1,
+    ), $atts ) );
 	 
 
 //-----------------
@@ -38,7 +47,7 @@ function luther_thesen_auswahl_func($atts) {
 //-----------------
 $args1 = [
    'post_type'      => 'cars',
-   'posts_per_page' => 10,
+   //'posts_per_page' => 10,
    //'orderby'        => 'title',
    //'order'          => 'asc',
    'meta_query'     => [
@@ -56,7 +65,7 @@ $args1 = [
 //-----------------
 $args2 = [
    'post_type'      => 'post',
-   'posts_per_page' => 10,
+   //'posts_per_page' => 10,
    //'orderby'        => 'date',
    //'order'          => 'desc',
    'meta_query'     => [
@@ -70,14 +79,14 @@ $args2 = [
 ];
 
 
-//------------------------------
+/*//------------------------------
 // Order by a common meta value
 //------------------------------
 
 // Modify sub fields:
 add_filter( 'cq_sub_fields', $callback = function( $fields ) {
     return $fields . ', meta_value';
-});
+});*/
 
 //---------------------------
 // Combined queries #1 + #2:
@@ -85,7 +94,7 @@ add_filter( 'cq_sub_fields', $callback = function( $fields ) {
 $args = [
     'combined_query' => [        
 	'args'           => [ $args1, $args2 ],
-	'posts_per_page' => 5,
+	//'posts_per_page' => 5,
 	'orderby'        => 'meta_value_num',
 	'order'          => 'DESC',
     ]
@@ -94,26 +103,36 @@ $args = [
 //---------
 // Output:
 //---------
-// See example 1
 
-remove_filter( 'cq_sub_fields', $callback );
+//remove_filter( 'cq_sub_fields', $callback );
 
-$q = new WP_Query( $args );
-if( $q->have_posts() ):
-	?><ul><?php
-	while( $q->have_posts() ): $q->the_post();
-		?><li><a href="<?php the_permalink();?>"><?php the_title();?></a></li><?php
+// HTML LOOP BODY / part 1
+$output = '<div class="clear"></div><div class="childs grid_12">';
+
+// loop
+$thesen_auswahl = new WP_Query( $args );
+if( $thesen_auswahl->have_posts() ):
+	
+	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
+		$output .= '<div id="service-hp">'.
+                   get_the_post_thumbnail('home-thumb').
+                   '<h2 style="margin-bottom:5px">'.
+                   get_the_title().
+                   '</h2>'.
+                   get_the_excerpt().
+                   '<a class="read-more" href="'.
+                   get_permalink().
+                   '">en savoir plus <img src="'.
+                   get_bloginfo( 'template_url' ).
+                   '/images/read-more.png"></a></div><!--  ends here -->';
 	endwhile;
-	?></ul><?php
 	wp_reset_postdata();
+	$output .= '</div>';
 else:
 	_e( 'Sorry no posts found!' );
 endif;  
 
-
-
-// ---------------------------------	
-return $Content;
+return $output;
 }
 
-add_shortcode('luther-thesen-auswahl', 'luther_thesen_auswahl_func');
+
