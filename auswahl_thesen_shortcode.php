@@ -23,13 +23,97 @@
 if (!defined('WPINC'))
     die;
 
-/**
- * Define plugin name to use as global inside the plugin files
- * Rename this for plugin and update it as you required to change the plugin name for new versions.
- */
+
+function luther_thesen_auswahl_func($atts) {
+	$Content = "<style>\r\n";
+	$Content .= "h3.demoClass {\r\n";
+	$Content .= "color: #26b158;\r\n";
+	$Content .= "}\r\n";
+	$Content .= "</style>\r\n";
+	$Content .= '<h3 class="demoClass">Check it out!</h3>';
+	 
+
+//-----------------
+// Sub query #1:
+//-----------------
+$args1 = [
+   'post_type'      => 'cars',
+   'posts_per_page' => 10,
+   //'orderby'        => 'title',
+   //'order'          => 'asc',
+   'meta_query'     => [
+        [
+            'key'      => 'doors',
+            'value'    => 0,
+            'compare'  => '>=',
+            'type'     => 'UNSIGNED'
+        ],
+    ],
+];
+
+//-----------------
+// Sub query #2:
+//-----------------
+$args2 = [
+   'post_type'      => 'post',
+   'posts_per_page' => 10,
+   //'orderby'        => 'date',
+   //'order'          => 'desc',
+   'meta_query'     => [
+        [
+            'key'      => 'doors',
+            'value'    => 0,
+            'compare'  => '>=',
+            'type'     => 'UNSIGNED'
+        ],
+    ],  
+];
+
+
+//------------------------------
+// Order by a common meta value
+//------------------------------
+
+// Modify sub fields:
+add_filter( 'cq_sub_fields', $callback = function( $fields ) {
+    return $fields . ', meta_value';
+});
+
+//---------------------------
+// Combined queries #1 + #2:
+//---------------------------
+$args = [
+    'combined_query' => [        
+	'args'           => [ $args1, $args2 ],
+	'posts_per_page' => 5,
+	'orderby'        => 'meta_value_num',
+	'order'          => 'DESC',
+    ]
+];
+
+//---------
+// Output:
+//---------
+// See example 1
+
+remove_filter( 'cq_sub_fields', $callback );
+
+$q = new WP_Query( $args );
+if( $q->have_posts() ):
+	?><ul><?php
+	while( $q->have_posts() ): $q->the_post();
+		?><li><a href="<?php the_permalink();?>"><?php the_title();?></a></li><?php
+	endwhile;
+	?></ul><?php
+	wp_reset_postdata();
+else:
+	_e( 'Sorry no posts found!' );
+endif;  
 
 
 
-	
-
+// ---------------------------------	
+return $Content;
 }
+
+add_shortcode('luther-thesen-auswahl', 'luther_thesen_auswahl_func');
