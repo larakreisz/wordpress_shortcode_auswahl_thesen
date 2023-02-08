@@ -48,7 +48,7 @@ extract( shortcode_atts( array(
 $args1 = [
    'post_type'      => 'these',
    'posts_per_page' => 1000,
-   //'orderby'        => 'title',
+   //'orderby'        => 'date',
    //'order'          => 'asc',
    'meta_query'     => [
 	'relation' => 'AND',
@@ -91,6 +91,9 @@ $args2 = [
         ],
     ],
 ];
+	
+
+
 
 
 //---------------------------
@@ -101,18 +104,19 @@ $args = [
 	'args'           => [ $args1, $args2 ],
 	'union'          => 'UNION',
 	'posts_per_page' => 1000,
-	//'orderby'        => 'wpcf-thesen-zufallszahl',
-	//'order'          => 'DESC',
+	'orderby'        => 'title',
+	'order'          => 'desc',
     ]
 ];
 
 //---------
 // Output:
 //---------
-
-
-// loop
+	
+// new WP_query
 $thesen_auswahl = new WP_Query( $args );
+	
+// loop
 if( $thesen_auswahl->have_posts() ):
 	
 	$output = '<div>';
@@ -126,6 +130,7 @@ if( $thesen_auswahl->have_posts() ):
 else:
 	$output = '<div>Sorry no posts found!!</div>';
 endif;  
+	
 
 return $output;
 	
