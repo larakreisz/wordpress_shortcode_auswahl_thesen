@@ -30,7 +30,7 @@ function luther_thesen_auswahl_func( $atts ) {
 	
 // extract shortcode attributes
 extract( shortcode_atts( array(
-        'loesungszahl' => [1,2],
+    'loesungszahl' => [1,2],
 	'entwicklungszahl' => [1,2],
 	'beziehungszahl' => [1,2],
 	'schluesselzahl' => [1,2],
@@ -47,22 +47,22 @@ extract( shortcode_atts( array(
 //-----------------
 $args1 = [
    'post_type'      => 'these',
-   //'posts_per_page' => 10,
+   'posts_per_page' => 1000,
    //'orderby'        => 'title',
    //'order'          => 'asc',
    'meta_query'     => [
 	'relation' => 'AND',
-        [
-            'key'      => 'thesen-zahl',
+    [
+            'key'      => 'wpcf-thesen-zahl',
             'value'    => $loesungszahl,
             'compare'  => 'IN',
             //'type'     => 'NUMERIC'
         ],
 	[
-            'key'      => 'thesen-position',
+            'key'      => 'wpcf-thesen-position',
             'value'    => 6,
             'compare'  => '=',
-            //'type'     => 'NUMERIC'
+            'type'     => 'NUMERIC'
         ],
     ],
 ];
@@ -72,35 +72,26 @@ $args1 = [
 //-----------------
 $args2 = [
    'post_type'      => 'these',
-   //'posts_per_page' => 10,
+   'posts_per_page' => 1000,
    //'orderby'        => 'date',
    //'order'          => 'desc',
    'meta_query'     => [
-        'relation' => 'AND',
-        [
-            'key'      => 'thesen-zahl',
+       'relation' => 'AND',
+       [
+            'key'      => 'wpcf-thesen-zahl',
             'value'    => $entwicklungszahl,
             'compare'  => 'IN',
             //'type'     => 'NUMERIC'
         ],
 	[
-            'key'      => 'thesen-position',
+            'key'      => 'wpcf-thesen-position',
             'value'    => 5,
             'compare'  => '=',
-            //'type'     => 'NUMERIC'
+            'type'     => 'NUMERIC'
         ],
     ],
 ];
 
-
-/*//------------------------------
-// Order by a common meta value
-//------------------------------
-
-// Modify sub fields:
-add_filter( 'cq_sub_fields', $callback = function( $fields ) {
-    return $fields . ', meta_value';
-});*/
 
 //---------------------------
 // Combined queries #1 + #2:
@@ -108,9 +99,10 @@ add_filter( 'cq_sub_fields', $callback = function( $fields ) {
 $args = [
     'combined_query' => [        
 	'args'           => [ $args1, $args2 ],
-	//'posts_per_page' => 5,
-	'orderby'        => 'thesen-zufallszahl',
-	'order'          => 'DESC',
+	'union'          => 'UNION',
+	'posts_per_page' => 1000,
+	//'orderby'        => 'wpcf-thesen-zufallszahl',
+	//'order'          => 'DESC',
     ]
 ];
 
@@ -118,15 +110,12 @@ $args = [
 // Output:
 //---------
 
-//remove_filter( 'cq_sub_fields', $callback );
-
-// HTML LOOP BODY / part 1
-$output = '<div>';
 
 // loop
 $thesen_auswahl = new WP_Query( $args );
 if( $thesen_auswahl->have_posts() ):
 	
+	$output = '<div>';
 	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
 		$output .= '<h2 style="margin-bottom:5px">'.
                    get_the_title().
@@ -135,10 +124,9 @@ if( $thesen_auswahl->have_posts() ):
 	wp_reset_postdata();
 	$output .= '</div>';
 else:
-	_e( 'Sorry no posts found!' );
+	$output = '<div>Sorry no posts found!!</div>';
 endif;  
 
 return $output;
+	
 }
-
-
