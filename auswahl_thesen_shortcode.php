@@ -30,32 +30,39 @@ function luther_thesen_auswahl_func( $atts ) {
 	
 // extract shortcode attributes
 extract( shortcode_atts( array(
-        'loesungszahl' => 1,
-	'entwicklungszahl' => 1,
-	'beziehungszahl' => 1,
-	'schluesselzahl' => 1,
-	'geistigezahl' => 1,
-	'psychezahl' => 1,
-	'koerperzahl' => 1,
-	'materiezahl' => 1,
-	'zusatzzahl' => 1,
+        'loesungszahl' => [1,2],
+	'entwicklungszahl' => [1,2],
+	'beziehungszahl' => [1,2],
+	'schluesselzahl' => [1,2],
+	'geistigezahl' => [1,2],
+	'psychezahl' => [1,2],
+	'koerperzahl' => [1,2],
+	'materiezahl' => [1,2],
+	'zusatzzahl' => [1,2],
     ), $atts ) );
 	 
 
 //-----------------
-// Sub query #1:
+// Sub query #1: Lösungszahl
 //-----------------
 $args1 = [
-   'post_type'      => 'cars',
+   'post_type'      => 'these',
    //'posts_per_page' => 10,
    //'orderby'        => 'title',
    //'order'          => 'asc',
    'meta_query'     => [
+	'relation' => 'AND',
         [
-            'key'      => 'doors',
-            'value'    => 0,
-            'compare'  => '>=',
-            'type'     => 'UNSIGNED'
+            'key'      => 'thesen-zahl',
+            'value'    => $loesungszahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'thesen-position',
+            'value'    => 6,
+            'compare'  => '=',
+            //'type'     => 'NUMERIC'
         ],
     ],
 ];
@@ -64,18 +71,25 @@ $args1 = [
 // Sub query #2:
 //-----------------
 $args2 = [
-   'post_type'      => 'post',
+   'post_type'      => 'these',
    //'posts_per_page' => 10,
    //'orderby'        => 'date',
    //'order'          => 'desc',
    'meta_query'     => [
+        'relation' => 'AND',
         [
-            'key'      => 'doors',
-            'value'    => 0,
-            'compare'  => '>=',
-            'type'     => 'UNSIGNED'
+            'key'      => 'thesen-zahl',
+            'value'    => $entwicklungszahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
         ],
-    ],  
+	[
+            'key'      => 'thesen-position',
+            'value'    => 5,
+            'compare'  => '=',
+            //'type'     => 'NUMERIC'
+        ],
+    ],
 ];
 
 
@@ -95,7 +109,7 @@ $args = [
     'combined_query' => [        
 	'args'           => [ $args1, $args2 ],
 	//'posts_per_page' => 5,
-	'orderby'        => 'meta_value_num',
+	'orderby'        => 'thesen-zufallszahl',
 	'order'          => 'DESC',
     ]
 ];
@@ -107,24 +121,16 @@ $args = [
 //remove_filter( 'cq_sub_fields', $callback );
 
 // HTML LOOP BODY / part 1
-$output = '<div class="clear"></div><div class="childs grid_12">';
+$output = '<div>';
 
 // loop
 $thesen_auswahl = new WP_Query( $args );
 if( $thesen_auswahl->have_posts() ):
 	
 	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
-		$output .= '<div id="service-hp">'.
-                   get_the_post_thumbnail('home-thumb').
-                   '<h2 style="margin-bottom:5px">'.
+		$output .= '<h2 style="margin-bottom:5px">'.
                    get_the_title().
-                   '</h2>'.
-                   get_the_excerpt().
-                   '<a class="read-more" href="'.
-                   get_permalink().
-                   '">en savoir plus <img src="'.
-                   get_bloginfo( 'template_url' ).
-                   '/images/read-more.png"></a></div><!--  ends here -->';
+                   '</h2><!--  ends here -->';
 	endwhile;
 	wp_reset_postdata();
 	$output .= '</div>';
