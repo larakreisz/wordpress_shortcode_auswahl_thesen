@@ -93,15 +93,190 @@ $args2 = [
 ];
 	
 
+//-----------------
+// Sub query #3: Beziehungszahl
+//-----------------
+$args3 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $beziehungszahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 7,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];
+	
+//-----------------
+// Sub query #4: Schlüsselzahl
+//-----------------
+$args4 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $schluesselzahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 8,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];	
+	
+//-----------------
+// Sub query #5: Geistige Zahl
+//-----------------
+$args5 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $geistigezahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 1,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];		
 
+//-----------------
+// Sub query #6: Psychezahl 
+//-----------------
+$args6 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $psychezahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 2,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];	
 
-
-//---------------------------
-// Combined queries #1 + #2:
-//---------------------------
+//-----------------
+// Sub query #7: Körperzahl
+//-----------------
+$args7 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $koerperzahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 3,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];		
+	
+//-----------------
+// Sub query #8: Materiezahl
+//-----------------
+$args8 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $materiezahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 4,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];		
+	
+	
+//-----------------
+// Sub query #9: Materiezahl
+//-----------------
+$args9 = [
+   'post_type'      => 'these',
+   'posts_per_page' => 1000,
+   //'orderby'        => 'date',
+   //'order'          => 'asc',
+   'meta_query'     => [
+	'relation' => 'AND',
+    [
+            'key'      => 'wpcf-thesen-zahl',
+            'value'    => $zusatzzahl,
+            'compare'  => 'IN',
+            //'type'     => 'NUMERIC'
+        ],
+	[
+            'key'      => 'wpcf-thesen-position',
+            'value'    => 9,
+            'compare'  => '=',
+            'type'     => 'NUMERIC'
+        ],
+    ],
+];			
+	
+	
+	
+//-----------------------------------------------------------
+// Combined queries #1 + #2 + #3 +#4 +#5 + #6 + #7 +#8 +#9:
+//-----------------------------------------------------------
 $args = [
     'combined_query' => [        
-	'args'           => [ $args1, $args2 ],
+	'args'           => [ $args1, $args2, $args3, $args4, $args5, $args6, $args7, $args8, $args9 ],
 	'union'          => 'UNION',
 	'posts_per_page' => 1000,
 	'orderby'        => 'title',
@@ -121,9 +296,11 @@ if( $thesen_auswahl->have_posts() ):
 	
 	$output = '<div>';
 	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
-		$output .= '<h2 style="margin-bottom:5px">'.
-                   get_the_title().
-                   '</h2><!--  ends here -->';
+		$output .= '<div class="row" style="margin-top:20px;"><div class="col-md-1"></div><div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div><div class="col-md-3">'.do_shortcode("[cred_form form='post-probant-thesen-anlegen']").'</div></div>';
+	
+	
+
+    	
 	endwhile;
 	wp_reset_postdata();
 	$output .= '</div>';
@@ -131,7 +308,9 @@ else:
 	$output = '<div>Sorry no posts found!!</div>';
 endif;  
 	
+	
 
 return $output;
-	
 }
+
+
