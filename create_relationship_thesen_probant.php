@@ -10,73 +10,98 @@ function lk_create_these_probant ($post_id, $form_data) {
 $forms = array( 212 );
 if ( in_array( $form_data['id'], $forms )) {
 
-// id of the current horse
+// id of probandt and these
+$id_probant = $_POST['probandt-id'];
 $id_these = get_the_ID();
-$id_probant = '37';
+
   
-// search all probantenten, that are already connected to this these
-$probanten_that_are_already_connected_to_this_these = toolset_get_related_posts($id_these, 'probant-these','child',1000000,0,array(),'post_id','parent');
+// search if a connection between this probant and the thesis already exist
+//$probanten_that_are_already_connected_to_this_these = toolset_get_related_posts($id_these, 'probant-these','child',1000000,0,array(),'post_id','parent');
+$query = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+            ),
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_these,
+                'role_to_query_by' => 'child',
+                'relationship' => 'probant-these'
+            )
+        ),
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+$intermediary_posts = $query->posts;
+$loop_iteration = 1;
   
   
 //if it returns some posts
-if($probanten_that_are_already_connected_to_this_these){
+if($intermediary_posts){
   
             //now get the single posts fields values 
-            foreach($probanten_that_are_already_connected_to_this_these as $probant ){ 
+            foreach($intermediary_posts as $intermediary ){ 
    
                 //get each Posts post data
-                $probant_post_data = get_post($probant);
+                $intermediary_post_data = get_post($intermediary);
                 //get each ID
-                $probant_post_id = $probant_post_data->ID;
+                $intermediary_post_id = $intermediary_post_data->ID;
                                 //get each posts field value
               
-               if ($probant_post_id == $id_probant) {
+               if ($loop_iteration == 1) {
                  
-                 //------------------------------------------------------ noch bearbeiten ANFANG
+                 //------------------------------------------------------ first loop interation
                
-                 // update already existing post
                  // Update intermediary -- insert new values
-                  $intermediary_pferd_benutzer = array(
+                  $intermediary = array(
                   'ID' => $intermediary_post_id,             
 
                   'meta_input'  => array ( 
-                  'wpcf-name-der-person-pferd' => $_POST['vorname'] . ' ' . $_POST['nachname'],  
-                  'wpcf-telefonnummer-der-person-pferd' => $_POST['telefonnummer'],  
-                  'wpcf-funktion-der-person' => $_POST['funktion-der-person'],  
-                  'wpcf-covid-19-position-der-kontaktperson-in-der-kontaktliste' => $_POST['position-in-kontaktliste'],  
-                  'wpcf-id-der-person' => $single_benutzer_post_id,  
-
-                  'wpcf-pferderechte' => array(                    
-                  "wpcf-fields-checkboxes-option-c21759eac7d2ce4422c3e524d7d14a55-1" => $_POST['bewegen'],
-                  "wpcf-fields-checkboxes-option-6701823c09e78919eeea9453f1082081-1" => $_POST['weide'],     
-                  "wpcf-fields-checkboxes-option-540d77c14903af7221cc765a2c081c6a-1" => $_POST['futter'],
-                  "wpcf-fields-checkboxes-option-5b4ec38b2042a18074c98c7445bc7e86-1" => $_POST['medikamente'],  
-                  "wpcf-fields-checkboxes-option-9cfc997aed28f00e0873a0371a86e35d-1" => $_POST['betreuungsplan'],
-                  "wpcf-fields-checkboxes-option-c2e386f0f644ea23d766b322d904be62-1" => $_POST['trainingstagebuch'],
-                  "wpcf-fields-checkboxes-option-40386dd323ead0e3b79c3840b0aadc7c-1" => 'Kontaktperson',
-                  "wpcf-fields-checkboxes-option-0c6e61ecf3b02b1e8bb867e1ca7d5a15-1" => $_POST['administrator'],
-                  ),   
+                  'wpcf-these-n-p' => $_POST['these-n-p'],  
+                  'wpcf-probant-n-p' => $_POST['probant-n-p'],  
                   ),   
                   );
 
 
                   // Update intermediary -- execute update
-                  wp_update_post ( $intermediary_pferd_benutzer );
-                 
-                 
-                 
+                  wp_update_post ($intermediary);
+                   
+                   
+                   // increase $loop_iteration by 1
+                   $loop_iteration += 1;
                  
                  
                
                } else {
+                   
+                   
+                //------------------------------------------------------ if there is more than one intermediary -> delete it
+                   
+                wp_delete_post( $intermediary_post_id, $force_delete = true);
+                   
+                // increase $loop_iteration by 1
+                   $loop_iteration += 1;
+                
+                   
+           }}} else {
+    
+               //------------------------------------------------------ if both pots are not related/connected with each other yet
                  
                  
                  //make new connextion and new intermediary
-                 //connect Pferd und Benutzerpost 
+                 //connect Probant and These 
                   $relationship_response = toolset_connect_posts(
-                    $relationship = 'pferd-selbstportrat',
-                    $id_horse,
-                    $single_benutzer_post_id
+                    $relationship = 'probant-these',
+                    $id_probant,
+                    $id_these
                   );  
 
 
@@ -84,41 +109,23 @@ if($probanten_that_are_already_connected_to_this_these){
 
 
                   // Update intermediary -- insert new values
-                  $intermediary_pferd_benutzer = array(
+                  $intermediary = array(
                   'ID' => $intermediary_post_id,             
 
                   'meta_input'  => array ( 
-                  'wpcf-name-der-person-pferd' => $_POST['vorname'] . ' ' . $_POST['nachname'],  
-                  'wpcf-telefonnummer-der-person-pferd' => $_POST['telefonnummer'],  
-                  'wpcf-funktion-der-person' => $_POST['funktion-der-person'],  
-                  'wpcf-covid-19-position-der-kontaktperson-in-der-kontaktliste' => $_POST['position-in-kontaktliste'],  
-                  'wpcf-id-der-person' => $single_benutzer_post_id,  
-
-                  'wpcf-pferderechte' => array(                    
-                  "wpcf-fields-checkboxes-option-c21759eac7d2ce4422c3e524d7d14a55-1" => $_POST['bewegen'],
-                  "wpcf-fields-checkboxes-option-6701823c09e78919eeea9453f1082081-1" => $_POST['weide'],     
-                  "wpcf-fields-checkboxes-option-540d77c14903af7221cc765a2c081c6a-1" => $_POST['futter'],
-                  "wpcf-fields-checkboxes-option-5b4ec38b2042a18074c98c7445bc7e86-1" => $_POST['medikamente'],  
-                  "wpcf-fields-checkboxes-option-9cfc997aed28f00e0873a0371a86e35d-1" => $_POST['betreuungsplan'],
-                  "wpcf-fields-checkboxes-option-c2e386f0f644ea23d766b322d904be62-1" => $_POST['trainingstagebuch'],
-                  "wpcf-fields-checkboxes-option-40386dd323ead0e3b79c3840b0aadc7c-1" => 'Kontaktperson',
-                  "wpcf-fields-checkboxes-option-0c6e61ecf3b02b1e8bb867e1ca7d5a15-1" => $_POST['administrator'],
-                  ),   
+                  'wpcf-these-n-p' => $_POST['these-n-p'],  
+                  'wpcf-probant-n-p' => $_POST['probant-n-p'],  
                   ),   
                   );
 
 
                   // Update intermediary -- execute update
-                  wp_update_post ( $intermediary_pferd_benutzer );
-                 
-                 
-                  //------------------------------------------------------ noch bearbeiten ENDE
+                  wp_update_post ( $intermediary );
+                              
                
-               
-               }
-              
-            }
-}
+           }     
+       }
+    }
   
   
-// Klammern am Ende überprüfen
+
