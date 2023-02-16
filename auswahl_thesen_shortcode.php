@@ -532,7 +532,7 @@ if($intermediary_l1){
            
            	}}
 	
-		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-01-sum', $l1_sum );
+		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-01-sum', 5 );
 
 	    }
 	
