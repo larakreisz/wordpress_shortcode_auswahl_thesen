@@ -508,7 +508,7 @@ $query_l1 = new WP_Query(
 	
 	
 $intermediary_l1 = $query_l1->posts;
-$l1_sum = 0; // --> Lösungzahl Summe
+$l1_sum = 0; // --> Lösungzahl Summe, probant field 'wpcf-probant-loesungszahl-01-sum' 
 
 //if it returns some posts
 if($intermediary_l1){
@@ -521,36 +521,25 @@ if($intermediary_l1){
                 //get each ID
                 $intermediary_post_id = $intermediary_post_data->ID;
                                 //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
                  
-                  if ($loop_iteration == 1) {
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
                  
-                 //------------------------------------------------------ first loop interation
+                 //------------------------------------------------------ $l1_sum = $l1_sum + 1
                
-                 // Update intermediary -- insert new values
-                  $intermediary = array(
-                  'ID' => $intermediary_post_id,             
-
-                  'meta_input'  => array ( 
-                  'wpcf-these-n-p' => $_POST['these-n-p'],  
-                  'wpcf-probant-n-p' => $_POST['probant-n-p'],  
-                  ),   
-                  );
-
-
-                  // Update intermediary -- execute update
-                  wp_update_post ($intermediary);
-                   
-                   
-                   // increase $loop_iteration by 1
-                   $loop_iteration += 1;
-                 
-                 
-               
-
+                 $l1_sum += 1
            
-           }}}
+           	}}
 	
-// Evaluation: Lösungszahl 2 -------------------------------------------------------
+		update_post_meta( $intermediary_post_id, 'wpcf-probant-loesungszahl-01-sum', $l1_sum );
+
+	    }
+	
+	
+// Evaluation: Lösungszahl 2 ----------------------------------------------------------------------------------------
 	
 	
 	
