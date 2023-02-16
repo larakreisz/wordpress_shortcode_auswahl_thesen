@@ -390,6 +390,8 @@ if($intermediary_posts){
                   'meta_input'  => array ( 
                   'wpcf-these-n-p' => $_POST['these-n-p'],  
                   'wpcf-probant-n-p' => $_POST['probant-n-p'],  
+		  'wpcf-these-zahl' => $_POST['these-zahl'], 
+		  'wpcf-these-position' => $_POST['these-position'], 
                   ),   
                   );
 
@@ -438,6 +440,8 @@ if($intermediary_posts){
                   'meta_input'  => array ( 
                   'wpcf-these-n-p' => $_POST['these-n-p'],  
                   'wpcf-probant-n-p' => $_POST['probant-n-p'],  
+		  'wpcf-these-zahl' => $_POST['these-zahl'], 
+		  'wpcf-these-position' => $_POST['these-position'], 
                   ),   
                   );
 
