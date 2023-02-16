@@ -486,13 +486,13 @@ $query_l1 = new WP_Query(
 	 'meta_query'     => [
 	    'relation' => 'AND',
 	    	[
-		    'key'      => 'wpcf-thesen-zahl',
+		    'key'      => 'wpcf-these-zahl',
 		    'value'    => $_POST['wpcf-probant-loesungszahl-01'],
-		    'compare'  => 'IN',
-		    //'type'     => 'NUMERIC'
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
 		],
 		[
-		    'key'      => 'wpcf-thesen-position',
+		    'key'      => 'wpcf-these-position',
 		    'value'    => 6,
 		    'compare'  => '=',
 		    'type'     => 'NUMERIC'
