@@ -1,6 +1,6 @@
 # wordpress_shortcode_auswahl_thesen
 
-#### <b>Luther Project: Argentur MediaX<b><br>
+### <b>Luther Project: Argentur MediaX<b><br>
 Contains:
 1. Shortcode: Auswahl der Thesen<br>
 2. 'cred_save_data' Hook, that perferms some custom action after the Form inside the Shortcode is submitted<br><br>
