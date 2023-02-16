@@ -290,16 +290,19 @@ $args = [
 	
 // new WP_query
 $thesen_auswahl = new WP_Query( $args );
+
+// loop number
+$loop_nr = 1;
 	
 // loop
 if( $thesen_auswahl->have_posts() ):
 	
 	$output = '<div>';
 	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
-		$output .= '<div class="row" style="margin-top:20px;"><div class="col-md-1"></div><div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div><div class="col-md-3">'.do_shortcode("[cred_form form='post-probant-thesen-anlegen']").'</div></div>';
+		$output .= '<div class="row" style="margin-top:20px;"><div class="col-md-1">$loop_nr</div><div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div><div class="col-md-3">'.do_shortcode("[cred_form form='post-probant-thesen-anlegen']").'</div></div>';
 	
 	
-
+	$loop_nr += 1;
     	
 	endwhile;
 	wp_reset_postdata();
