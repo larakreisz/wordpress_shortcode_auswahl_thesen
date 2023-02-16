@@ -482,11 +482,10 @@ $query_l1 = new WP_Query(
                 'related_to' => $id_probant,
                 'role_to_query_by' => 'parent',
                 'relationship' => 'probant-these'
-            ),
-        ),
-	'meta_query'     => [
+         )),
+	 'meta_query'     => [
 	    'relation' => 'AND',
-	    [
+	    	[
 		    'key'      => 'wpcf-thesen-zahl',
 		    'value'    => $_POST['wpcf-probant-loesungszahl-01'],
 		    'compare'  => 'IN',
@@ -498,7 +497,6 @@ $query_l1 = new WP_Query(
 		    'compare'  => '=',
 		    'type'     => 'NUMERIC'
 		],
-	    ],
 	],
         //'meta_key' => 'wpcf-genre',
         //'orderby' => 'meta_value',
