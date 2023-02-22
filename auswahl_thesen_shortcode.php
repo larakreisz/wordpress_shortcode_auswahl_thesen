@@ -391,7 +391,8 @@ if($intermediary_posts){
                   'wpcf-these-n-p' => $_POST['these-n-p'],  
                   'wpcf-probant-n-p' => $_POST['probant-n-p'],  
 		  'wpcf-these-zahl' => $_POST['these-zahl'], 
-		  'wpcf-these-position' => $_POST['these-position'], 
+		  'wpcf-these-position' => $_POST['these-position'], 		
+		  'wpcf-these-zufall' => $_POST['these-zufall'],			  
                   ),   
                   );
 
@@ -441,7 +442,8 @@ if($intermediary_posts){
                   'wpcf-these-n-p' => $_POST['these-n-p'],  
                   'wpcf-probant-n-p' => $_POST['probant-n-p'],  
 		  'wpcf-these-zahl' => $_POST['these-zahl'], 
-		  'wpcf-these-position' => $_POST['these-position'], 
+		  'wpcf-these-position' => $_POST['these-position'],
+		  'wpcf-these-zufall' => $_POST['these-zufall'],			  
                   ),   
                   );
 
@@ -536,6 +538,7 @@ if($intermediary_l1){
            
            	}}
 	
+		$l1_sum = $l1_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-01-sum', $l1_sum );
 
 	    }
@@ -543,9 +546,1087 @@ if($intermediary_l1){
 	
 // Evaluation: Lösungszahl 2 ----------------------------------------------------------------------------------------
 	
+$query_l2 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-loesungszahl-02'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 6,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
 	
 	
+$intermediary_l2 = $query_l2->posts;
+$l2_sum = 0; // --> Lösungzahl Summe, probant field 'wpcf-probant-loesungszahl-02-sum' 
+
+//if it returns some posts
+if($intermediary_l2){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_l2 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $l2_sum = $l2_sum + 1
+               
+                 $l2_sum += 1;
+           
+           	}}
 	
+	    $l2_sum = $l2_sum * 20;
+        update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-02-sum', $l2_sum );
+
+	    }
+	
+	
+// Evaluation: Lösungszahl 3 ----------------------------------------------------------------------------------------
+	
+$query_l3 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-loesungszahl-03'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 6,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_l3 = $query_l3->posts;
+$l3_sum = 0; // --> Lösungzahl Summe, probant field 'wpcf-probant-loesungszahl-03-sum' 
+
+//if it returns some posts
+if($intermediary_l3){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_l3 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $l3_sum = $l3_sum + 1
+               
+                 $l3_sum += 1;
+           
+           	}}
+	
+	    $l3_sum = $l3_sum * 20;
+		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-03-sum', $l3_sum );
+
+	    }
+	
+	
+// Evaluation: Lösungszahl 4 ----------------------------------------------------------------------------------------	
+	
+$query_l4 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-loesungszahl-04'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 6,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_l4 = $query_l4->posts;
+$l4_sum = 0; // --> Lösungzahl Summe, probant field 'wpcf-probant-loesungszahl-04-sum' 
+
+//if it returns some posts
+if($intermediary_l4){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_l4 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $l4_sum = $l4_sum + 1
+               
+                 $l4_sum += 1;
+           
+           	}}
+	
+	    $l4_sum = $l4_sum * 20;
+		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-04-sum', $l4_sum );
+
+	    }
+	
+	
+// Evaluation: Lösungszahl 5 ----------------------------------------------------------------------------------------	
+	
+$query_l5 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-loesungszahl-05'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 6,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_l5 = $query_l5->posts;
+$l5_sum = 0; // --> Entwicklungszahl Summe, probant field 'wpcf-probant-loesungszahl-05-sum' 
+
+//if it returns some posts
+if($intermediary_l5){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_l5 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $l5_sum = $l5_sum + 1
+               
+                 $l5_sum += 1;
+           
+           	}}
+	
+	    $l5_sum = $l5_sum * 20;
+		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-05-sum', $l5_sum );
+
+	    }
+	
+	
+// Evaluation: Entwicklungszahl 1 ----------------------------------------------------------------------------------------	
+	
+$query_e1 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-entwicklungszahl-01'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 5,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_e1 = $query_e1->posts;
+$e1_sum = 0; // --> Entwicklungszahl Summe, probant field 'wpcf-probant-entwicklungszahl-01-sum' 
+
+//if it returns some posts
+if($intermediary_e1){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_e1 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $e1_sum = $e1_sum + 1
+               
+                 $e1_sum += 1;
+           
+           	}}
+	    $e1_sum = $e1_sum * 20;
+		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-01-sum', $e1_sum );
+
+	    }
+		
+// Evaluation: Entwicklungszahl 2 ----------------------------------------------------------------------------------------		
+	
+$query_e2 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-entwicklungszahl-02'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 5,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_e2 = $query_e2->posts;
+$e2_sum = 0; // --> Entwicklungszahl Summe, probant field 'wpcf-probant-entwicklungszahl-02-sum' 
+
+//if it returns some posts
+if($intermediary_e2){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_e2 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $e2_sum = $e2_sum + 1
+               
+                 $e2_sum += 1;
+           
+           	}}
+	
+	    $e2_sum = $e2_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-02-sum', $e2_sum );
+
+	    }
+	
+// Evaluation: Entwicklungszahl 3 ----------------------------------------------------------------------------------------			
+
+$query_e3 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-entwicklungszahl-03'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 5,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_e3 = $query_e3->posts;
+$e3_sum = 0; // --> Entwicklungszahl Summe, probant field 'wpcf-probant-entwicklungszahl-03-sum' 
+
+//if it returns some posts
+if($intermediary_e3){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_e3 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $e3_sum = $e3_sum + 1
+               
+                 $e3_sum += 1;
+           
+           	}}
+	
+	    $e3_sum = $e3_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-03-sum', $e3_sum );
+
+	    }
+	
+
+// Evaluation: Entwicklungszahl 4 ----------------------------------------------------------------------------------------		
+	
+	
+$query_e4 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-entwicklungszahl-04'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 5,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_e4 = $query_e4->posts;
+$e4_sum = 0; // --> Entwicklungszahl Summe, probant field 'wpcf-probant-entwicklungszahl-03-sum' 
+
+//if it returns some posts
+if($intermediary_e4){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_e4 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $e4_sum = $e4_sum + 1
+               
+                 $e4_sum += 1;
+           
+           	}}
+	
+	    $e4_sum = $e4_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-04-sum', $e4_sum );
+
+	    }
+	
+
+// Evaluation: Entwicklungszahl 5 ----------------------------------------------------------------------------------------			
+	
+$query_e5 = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-entwicklungszahl-05'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 5,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_e5 = $query_e5->posts;
+$e5_sum = 0; // --> Entwicklungszahl Summe, probant field 'wpcf-probant-entwicklungszahl-05-sum' 
+
+//if it returns some posts
+if($intermediary_e5){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_e5 as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $e5_sum = $e5_sum + 1
+               
+                 $e5_sum += 1;
+           
+           	}}
+	
+	    $e5_sum = $e5_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-05-sum', $e5_sum );
+
+	    }
+	
+
+// Evaluation: Beziehungszahl ----------------------------------------------------------------------------------------			
+	
+$query_bez = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-beziehungszahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 7,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_bez = $query_bez->posts;
+$bez_sum = 0; // --> Beziehungszahl Summe, probant field 'wpcf-probant-beziehungszahl-sum' 
+
+//if it returns some posts
+if($intermediary_bez){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_bez as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $bez_sum = $bez_sum + 1
+               
+                 $bez_sum += 1;
+           
+           	}}
+	
+	    $bez_sum = $bez_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-beziehungszahl-sum', $bez_sum );
+
+	    }
+	
+
+// Evaluation: Schlüsselzahl ----------------------------------------------------------------------------------------	
+		
+$query_schl = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-schluesselzahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 8,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_schl = $query_schl->posts;
+$schl_sum = 0; // --> Schlüsselzahl Summe, probant field 'wpcf-probant-schluesselzahl-sum' 
+
+//if it returns some posts
+if($intermediary_schl){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_schl as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $schl_sum = $schl_sum + 1
+               
+                 $schl_sum += 1;
+           
+           	}}
+	
+	    $schl_sum = $schl_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-schluesselzahl-sum', $schl_sum );
+
+	    }
+	
+
+// Evaluation: Geistigezahl ----------------------------------------------------------------------------------------		
+	
+$query_gei = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-geistigezahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 1,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_gei = $query_gei->posts;
+$gei_sum = 0; // --> Beziehungszahl Summe, probant field 'wpcf-probant-geistigezahl-sum' 
+
+//if it returns some posts
+if($intermediary_gei){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_gei as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $gei_sum = $gei_sum + 1
+               
+                 $gei_sum += 1;
+           
+           	}}
+	
+	    $gei_sum = $gei_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-geistigezahl-sum', $gei_sum );
+
+	    }
+	
+
+// Evaluation: Psychezahl ----------------------------------------------------------------------------------------		
+	
+$query_psyc = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-psychezahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 2,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_psyc = $query_psyc->posts;
+$psyc_sum = 0; // --> Psychezahl Summe, probant field 'probant-psychezahl-sum' 
+
+//if it returns some posts
+if($intermediary_psyc){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_psyc as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $psyc_sum = $psyc_sum + 1
+               
+                 $psyc_sum += 1;
+           
+           	}}
+	
+	    $psyc_sum = $psyc_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-psychezahl-sum', $psyc_sum );
+
+	    }
+
+// Evaluation: Körperzahl ----------------------------------------------------------------------------------------	
+	
+$query_koer = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-koerperzahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 3,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_koer = $query_koer->posts;
+$koer_sum = 0; // --> Körperzahl Summe, probant field 'wpcf-probant-koerperzahl-sum' 
+
+//if it returns some posts
+if($intermediary_koer){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_koer as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $koer_sum = $koer_sum + 1
+               
+                 $koer_sum += 1;
+           
+           	}}
+	
+	    $koer_sum = $koer_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-koerperzahl-sum', $koer_sum );
+
+	    }	
+	
+
+// Evaluation: Materiezahl ----------------------------------------------------------------------------------------	
+	
+$query_mat = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-materiezahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 4,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_mat = $query_mat->posts;
+$mat_sum = 0; // --> Materiezahl Summe, probant field 'wpcf-probant-materiezahl-sum' 
+
+//if it returns some posts
+if($intermediary_mat){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_mat as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $mat_sum = $mat_sum + 1
+               
+                 $mat_sum += 1;
+           
+           	}}
+	
+	    $mat_sum = $mat_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-materiezahl-sum', $mat_sum );
+
+	    }	
+		
+// Evaluation: Zusatzzahl ----------------------------------------------------------------------------------------	
+	
+$query_zusa = new WP_Query( 
+    array(
+        'post_type' => 'probant-these',
+        'posts_per_page' => -1,
+        'toolset_relationships' => array(
+            array(
+                'role' => 'intermediary',
+                'related_to' => $id_probant,
+                'role_to_query_by' => 'parent',
+                'relationship' => 'probant-these'
+         )),
+	 'meta_query'     => [
+	    'relation' => 'AND',
+	    	[
+		    'key'      => 'wpcf-these-zahl',
+		    'value'    => $_POST['wpcf-probant-zusatzzahl'],
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+		[
+		    'key'      => 'wpcf-these-position',
+		    'value'    => 9,
+		    'compare'  => '=',
+		    'type'     => 'NUMERIC'
+		],
+	],
+        //'meta_key' => 'wpcf-genre',
+        //'orderby' => 'meta_value',
+        //'order' => 'ASC',
+    )
+);
+	
+	
+$intermediary_zusa = $query_zusa->posts;
+$zusa_sum = 0; // --> Zusatzzahl Summe, probant field 'wpcf-probant-zusatzzahl-sum' 
+
+//if it returns some posts
+if($intermediary_zusa){
+  
+            //now get the single posts fields values 
+            foreach($intermediary_zusa as $intermediary ){ 
+   
+                //get each Posts post data
+                $intermediary_post_data = get_post($intermediary);
+                //get each ID
+                $intermediary_post_id = $intermediary_post_data->ID;
+                                //get each posts field value
+		//get probant-n-p field
+		$wpcf_probant_n_p = get_post_meta( $intermediary_post_id, 'wpcf-probant-n-p', true );
+		//get these-n-p field
+		$wpcf_these_n_p = get_post_meta( $intermediary_post_id, 'wpcf-these-n-p', true );
+                 
+                 if ($wpcf_probant_n_p == $wpcf_these_n_p) {
+                 
+                 //------------------------------------------------------ $zusa_sum = $zusa_sum + 1
+               
+                 $zusa_sum += 1;
+           
+           	}}
+	
+	    $zusa_sum = $zusa_sum * 20;	
+		update_post_meta( $id_probant, 'wpcf-probant-zusatzzahl-sum', $zusa_sum );
+
+	    }	
+		
 	
 	
        }
