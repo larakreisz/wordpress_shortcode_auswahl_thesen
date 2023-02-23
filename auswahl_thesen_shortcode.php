@@ -336,6 +336,12 @@ if ( in_array( $form_data['id'], $forms )) {
 // id of probandt and these
 $id_probant = $_POST['probandt-id'];
 $id_these = get_the_ID();
+	
+
+// whethter the probant agrees or disagrees with the given thesis - depending on the button, that he has clicked to submit the form
+$probant_n_p = '';
+if (isset($_POST['form_submit_disagree'])) { $probant_n_p = 'n';}    // form_submit_disagree => Disagree-Button
+if (isset($_POST['form_submit_agree'])) { $probant_n_p = 'n';}	    // form_submit_agree => Agree-Button
 
   
 // search if a connection between this probant and the thesis already exist
@@ -389,7 +395,7 @@ if($intermediary_posts){
 
                   'meta_input'  => array ( 
                   'wpcf-these-n-p' => $_POST['these-n-p'],  
-                  'wpcf-probant-n-p' => $_POST['probant-n-p'],  
+                  'wpcf-probant-n-p' => $probant_n_p,  
 		  'wpcf-these-zahl' => $_POST['these-zahl'], 
 		  'wpcf-these-position' => $_POST['these-position'], 		
 		  'wpcf-these-zufall' => $_POST['these-zufall'],			  
@@ -440,7 +446,7 @@ if($intermediary_posts){
 
                   'meta_input'  => array ( 
                   'wpcf-these-n-p' => $_POST['these-n-p'],  
-                  'wpcf-probant-n-p' => $_POST['probant-n-p'],  
+                  'wpcf-probant-n-p' => $probant_n_p,  
 		  'wpcf-these-zahl' => $_POST['these-zahl'], 
 		  'wpcf-these-position' => $_POST['these-position'],
 		  'wpcf-these-zufall' => $_POST['these-zufall'],			  
