@@ -327,7 +327,9 @@ return $output;
 
 // ---------- HOOK 1---- PHP, THAT PERFORMS SOME CUSTOM ACTION AFTER THE FORM INSIDE THE SHORTCODE IS SUBMITTED ------------------------------------------
 
-add_action('cred_save_data', 'lk_create_these_probant_intermediary',10,2);
+
+
+add_action('cred_save_data', 'lk_create_these_probant_intermediary',99,2);
 function lk_create_these_probant_intermediary ($post_id, $form_data) {
   
 $forms = array( 212 );
@@ -338,10 +340,23 @@ $id_probant = $_POST['probandt-id'];
 $id_these = get_the_ID();
 	
 
+
+$found_agree = array_search("Ich_stimme_zu",$_POST);
+$found_disagree = array_search("Ich_stimme_nicht_zu",$_POST);
+
+
+if(!empty($found_agree)) {
+	$clicked_button = $_POST[$found_agree];
+}else if(!empty($found_disagree)){
+	$clicked_button = $_POST[$found_disagree];
+}
+
+
 // whethter the probant agrees or disagrees with the given thesis - depending on the button, that he has clicked to submit the form
 $probant_n_p = '';
-if (isset($_POST['form_submit_disagree'])) { $probant_n_p = 'n';}    // form_submit_disagree => Disagree-Button
-if (isset($_POST['form_submit_agree'])) { $probant_n_p = 'n';}	    // form_submit_agree => Agree-Button
+if ($clicked_button == 'Ich_stimme_nicht_zu' ) { $probant_n_p = 'n';}    // form_submit_disagree => Disagree-Button
+if ($clicked_button == 'Ich_stimme_zu') { $probant_n_p = 'p';}	    // form_submit_agree => Agree-Button
+		
 
   
 // search if a connection between this probant and the thesis already exist
@@ -612,8 +627,8 @@ if($intermediary_l2){
            
            	}}
 	
-	    $l2_sum = $l2_sum * 20;
-        update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-02-sum', $l2_sum );
+	    	$l2_sum = $l2_sum * 20;
+        	update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-02-sum', $l2_sum );
 
 	    }
 	
@@ -680,7 +695,7 @@ if($intermediary_l3){
            
            	}}
 	
-	    $l3_sum = $l3_sum * 20;
+	    	$l3_sum = $l3_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-03-sum', $l3_sum );
 
 	    }
@@ -748,7 +763,7 @@ if($intermediary_l4){
            
            	}}
 	
-	    $l4_sum = $l4_sum * 20;
+	    	$l4_sum = $l4_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-04-sum', $l4_sum );
 
 	    }
@@ -816,7 +831,7 @@ if($intermediary_l5){
            
            	}}
 	
-	    $l5_sum = $l5_sum * 20;
+	   	$l5_sum = $l5_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-05-sum', $l5_sum );
 
 	    }
@@ -883,7 +898,7 @@ if($intermediary_e1){
                  $e1_sum += 1;
            
            	}}
-	    $e1_sum = $e1_sum * 20;
+	    	$e1_sum = $e1_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-01-sum', $e1_sum );
 
 	    }
@@ -950,7 +965,7 @@ if($intermediary_e2){
            
            	}}
 	
-	    $e2_sum = $e2_sum * 20;	
+	    	$e2_sum = $e2_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-02-sum', $e2_sum );
 
 	    }
@@ -1017,7 +1032,7 @@ if($intermediary_e3){
            
            	}}
 	
-	    $e3_sum = $e3_sum * 20;	
+	    	$e3_sum = $e3_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-03-sum', $e3_sum );
 
 	    }
@@ -1086,7 +1101,7 @@ if($intermediary_e4){
            
            	}}
 	
-	    $e4_sum = $e4_sum * 20;	
+	    	$e4_sum = $e4_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-04-sum', $e4_sum );
 
 	    }
@@ -1154,7 +1169,7 @@ if($intermediary_e5){
            
            	}}
 	
-	    $e5_sum = $e5_sum * 20;	
+	    	$e5_sum = $e5_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-05-sum', $e5_sum );
 
 	    }
@@ -1222,7 +1237,7 @@ if($intermediary_bez){
            
            	}}
 	
-	    $bez_sum = $bez_sum * 20;	
+	    	$bez_sum = $bez_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-beziehungszahl-sum', $bez_sum );
 
 	    }
@@ -1290,7 +1305,7 @@ if($intermediary_schl){
            
            	}}
 	
-	    $schl_sum = $schl_sum * 20;	
+	    	$schl_sum = $schl_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-schluesselzahl-sum', $schl_sum );
 
 	    }
@@ -1358,7 +1373,7 @@ if($intermediary_gei){
            
            	}}
 	
-	    $gei_sum = $gei_sum * 20;	
+	    	$gei_sum = $gei_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-geistigezahl-sum', $gei_sum );
 
 	    }
@@ -1426,7 +1441,7 @@ if($intermediary_psyc){
            
            	}}
 	
-	    $psyc_sum = $psyc_sum * 20;	
+	    	$psyc_sum = $psyc_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-psychezahl-sum', $psyc_sum );
 
 	    }
@@ -1493,7 +1508,7 @@ if($intermediary_koer){
            
            	}}
 	
-	    $koer_sum = $koer_sum * 20;	
+	    	$koer_sum = $koer_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-koerperzahl-sum', $koer_sum );
 
 	    }	
@@ -1561,7 +1576,7 @@ if($intermediary_mat){
            
            	}}
 	
-	    $mat_sum = $mat_sum * 20;	
+	    	$mat_sum = $mat_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-materiezahl-sum', $mat_sum );
 
 	    }	
@@ -1628,7 +1643,7 @@ if($intermediary_zusa){
            
            	}}
 	
-	    $zusa_sum = $zusa_sum * 20;	
+	    	$zusa_sum = $zusa_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-zusatzzahl-sum', $zusa_sum );
 
 	    }	
