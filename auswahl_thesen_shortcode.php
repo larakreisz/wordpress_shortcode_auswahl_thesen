@@ -25,7 +25,7 @@ if (!defined('WPINC'))
 
 
 
-// ------------------------------------------- SHORTCODE ------------------------------------------
+// ------------------------------------------- SHORTCODE 1 ------------------------------------------
 
 add_shortcode('luther-thesen-auswahl', 'luther_thesen_auswahl_func');
 
@@ -34,6 +34,7 @@ function luther_thesen_auswahl_func( $atts ) {
 	
 // extract shortcode attributes
 extract( shortcode_atts( array(
+	'id_probant' => '124',
     'loesungszahl' => [1,2],
 	'entwicklungszahl' => [1,2],
 	'beziehungszahl' => [1,2],
@@ -43,6 +44,7 @@ extract( shortcode_atts( array(
 	'koerperzahl' => [1,2],
 	'materiezahl' => [1,2],
 	'zusatzzahl' => [1,2],
+	'print' => 'no'
     ), $atts ) );
 	 
 
@@ -301,15 +303,84 @@ $loop_nr = 1;
 // loop
 if( $thesen_auswahl->have_posts() ):
 	
+	// step 1: start building the shortcode content
 	$output = '<div>';
-	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
-		$output .= '<div class="row" style="margin-top:20px;"><div class="col-md-1">'.$loop_nr.'</div><div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div><div class="col-md-3">'.do_shortcode("[cred_form form='probant-these-relationship-anlegen']").'</div></div>';
 	
+	while( $thesen_auswahl->have_posts() ): $thesen_auswahl->the_post();
+	
+	// shortcode content ----> NO PRINT ------------------------------------------------------
+	if ($print == 'no') {
+	
+	// step 2: load the form
+	$form = do_shortcode("[cred_form form='probant-these-relationship-anlegen']");
+	
+	// step 3: continue building the shortcode content
+	$output .= '<div class="row" style="margin-top:20px;">
+		<div class="col-md-1">'.$loop_nr.'</div>
+		<div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div>
+		<div class="col-md-3">';
+	
+	// step 4: to check, if we already said "disagree/agree", we need to query if an itermetiary post (probant-these) already exists. We get the $id_probant as a shortcode_parameter (fallback value is '124'). For example: [luther-thesen-auswahl id_probant="[wpv-search-term param="probant-id"]"]. The id of the current thesis in the loop can be fetched in the following way: $id_these =  get_the_ID(); 
+	
+	$id_these =  get_the_ID(); // test: $id_these ='856';
+
+  
+	// search if a connection between this probant and the thesis already exist
+	$query_intermediary_probant_these = new WP_Query( 
+    	array(
+			'post_type' => 'probant-these',
+			'posts_per_page' => 1,
+			'toolset_relationships' => array(
+				array(
+					'role' => 'intermediary',
+					'related_to' => $id_probant,
+					'role_to_query_by' => 'parent',
+					'relationship' => 'probant-these'
+				),
+				array(
+					'role' => 'intermediary',
+					'related_to' => $id_these,
+					'role_to_query_by' => 'child',
+					'relationship' => 'probant-these'
+				)
+			),
+		)
+	);
+	
+	
+	// loop
+	if( $query_intermediary_probant_these -> have_posts() ) {
+		while( $query_intermediary_probant_these -> have_posts() ) { 
+			$query_intermediary_probant_these -> the_post();
+			
+		// step 5: continue building the shortcode content
+		$probant_n_p = do_shortcode("[types field='probant-n-p'][/types]");
+		$color = '#000000';
+		if ($probant_n_p == 'n') {$color = '#008000';}
+        if ($probant_n_p == 'p') {$color = '#ff0000';}
+
+		$output .= '<div><span style="color:' . $color . '; font-weight:bold;">✓ Abgestimmt: '. $probant_n_p . '</span></div>';
+			
+		}
+	}
+	
+	// step 6: continue building the shortcode content
+	$output .= '<div>'. $form. '</div></div></div>';
+		
+	} else {
+
+	
+	// shortcode content ----> PRINT ------------------------------------------------------
+		$output .= '<div class="row" style="margin-top:20px;"><div class="col-md-1">'.$loop_nr.'</div><div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div><div class="col-md-3"><div><input type="checkbox" disabled> Ich stimme zu</div><div><input type="checkbox" disabled> Ich stimme nicht zu</div></div></div>';
 	
 	$loop_nr += 1;
+		
+	}
+	
     	
 	endwhile;
 	wp_reset_postdata();
+	// step 7: continue building the shortcode content
 	$output .= '</div>';
 else:
 	$output = '<div>Sorry no posts found!!</div>';
@@ -319,6 +390,7 @@ endif;
 	
 return $output;
 }
+
 
 
 
@@ -338,25 +410,18 @@ if ( in_array( $form_data['id'], $forms )) {
 // id of probandt and these
 $id_probant = $_POST['probandt-id'];
 $id_these = get_the_ID();
-	
 
 
 $found_agree = array_search("Ich_stimme_zu",$_POST);
 $found_disagree = array_search("Ich_stimme_nicht_zu",$_POST);
 
 
-if(!empty($found_agree)) {
-	$clicked_button = $_POST[$found_agree];
-}else if(!empty($found_disagree)){
-	$clicked_button = $_POST[$found_disagree];
+if(!empty($found_agree)) { // form_submit_disagree => Disagree-Button
+	 $probant_n_p = 'p';
+}else if(!empty($found_disagree)){ // form_submit_agree => Agree-Button
+	$probant_n_p = 'n';
 }
 
-
-// whethter the probant agrees or disagrees with the given thesis - depending on the button, that he has clicked to submit the form
-$probant_n_p = '';
-if ($clicked_button == 'Ich_stimme_nicht_zu' ) { $probant_n_p = 'n';}    // form_submit_disagree => Disagree-Button
-if ($clicked_button == 'Ich_stimme_zu') { $probant_n_p = 'p';}	    // form_submit_agree => Agree-Button
-		
 
   
 // search if a connection between this probant and the thesis already exist
@@ -627,8 +692,8 @@ if($intermediary_l2){
            
            	}}
 	
-	    	$l2_sum = $l2_sum * 20;
-        	update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-02-sum', $l2_sum );
+	    $l2_sum = $l2_sum * 20;
+        update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-02-sum', $l2_sum );
 
 	    }
 	
@@ -695,7 +760,7 @@ if($intermediary_l3){
            
            	}}
 	
-	    	$l3_sum = $l3_sum * 20;
+	    $l3_sum = $l3_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-03-sum', $l3_sum );
 
 	    }
@@ -763,7 +828,7 @@ if($intermediary_l4){
            
            	}}
 	
-	    	$l4_sum = $l4_sum * 20;
+	    $l4_sum = $l4_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-04-sum', $l4_sum );
 
 	    }
@@ -831,7 +896,7 @@ if($intermediary_l5){
            
            	}}
 	
-	   	$l5_sum = $l5_sum * 20;
+	    $l5_sum = $l5_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-loesungszahl-05-sum', $l5_sum );
 
 	    }
@@ -898,7 +963,7 @@ if($intermediary_e1){
                  $e1_sum += 1;
            
            	}}
-	    	$e1_sum = $e1_sum * 20;
+	    $e1_sum = $e1_sum * 20;
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-01-sum', $e1_sum );
 
 	    }
@@ -965,7 +1030,7 @@ if($intermediary_e2){
            
            	}}
 	
-	    	$e2_sum = $e2_sum * 20;	
+	    $e2_sum = $e2_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-02-sum', $e2_sum );
 
 	    }
@@ -1032,7 +1097,7 @@ if($intermediary_e3){
            
            	}}
 	
-	    	$e3_sum = $e3_sum * 20;	
+	    $e3_sum = $e3_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-03-sum', $e3_sum );
 
 	    }
@@ -1101,7 +1166,7 @@ if($intermediary_e4){
            
            	}}
 	
-	    	$e4_sum = $e4_sum * 20;	
+	    $e4_sum = $e4_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-04-sum', $e4_sum );
 
 	    }
@@ -1169,7 +1234,7 @@ if($intermediary_e5){
            
            	}}
 	
-	    	$e5_sum = $e5_sum * 20;	
+	    $e5_sum = $e5_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-entwicklungszahl-05-sum', $e5_sum );
 
 	    }
@@ -1237,7 +1302,7 @@ if($intermediary_bez){
            
            	}}
 	
-	    	$bez_sum = $bez_sum * 20;	
+	    $bez_sum = $bez_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-beziehungszahl-sum', $bez_sum );
 
 	    }
@@ -1305,7 +1370,7 @@ if($intermediary_schl){
            
            	}}
 	
-	    	$schl_sum = $schl_sum * 20;	
+	    $schl_sum = $schl_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-schluesselzahl-sum', $schl_sum );
 
 	    }
@@ -1373,7 +1438,7 @@ if($intermediary_gei){
            
            	}}
 	
-	    	$gei_sum = $gei_sum * 20;	
+	    $gei_sum = $gei_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-geistigezahl-sum', $gei_sum );
 
 	    }
@@ -1441,7 +1506,7 @@ if($intermediary_psyc){
            
            	}}
 	
-	    	$psyc_sum = $psyc_sum * 20;	
+	    $psyc_sum = $psyc_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-psychezahl-sum', $psyc_sum );
 
 	    }
@@ -1508,7 +1573,7 @@ if($intermediary_koer){
            
            	}}
 	
-	    	$koer_sum = $koer_sum * 20;	
+	    $koer_sum = $koer_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-koerperzahl-sum', $koer_sum );
 
 	    }	
@@ -1576,7 +1641,7 @@ if($intermediary_mat){
            
            	}}
 	
-	    	$mat_sum = $mat_sum * 20;	
+	    $mat_sum = $mat_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-materiezahl-sum', $mat_sum );
 
 	    }	
@@ -1643,7 +1708,7 @@ if($intermediary_zusa){
            
            	}}
 	
-	    	$zusa_sum = $zusa_sum * 20;	
+	    $zusa_sum = $zusa_sum * 20;	
 		update_post_meta( $id_probant, 'wpcf-probant-zusatzzahl-sum', $zusa_sum );
 
 	    }	
