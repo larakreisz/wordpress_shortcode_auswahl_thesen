@@ -9,7 +9,7 @@ Contains:
 Requires the Toolset Plugin and the Combine Query Plugin (https://github.com/birgire/wp-combine-queries) to be activated.<br><br>
 Beispiel Shortcode: [luther-thesen-auswahl print="no" id_probant="[wpv-search-term param='probant-id']" loesungszahl="8, 9, 10" entwicklungszahl="18, 19, 28, 36, 44"]
 
-Shortcode Default Parameter: <br><br>
+Shortcode Default Parameter: <br>
 
 'id_probant' => '124',<br>
 'loesungszahl' => [1,2],<br>
