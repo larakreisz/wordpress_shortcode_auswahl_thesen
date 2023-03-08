@@ -20,5 +20,5 @@ Shortcode Default Parameter: <br>
 'psychezahl' => [1,2],<br>
 'koerperzahl' => [1,2],<br>
 'materiezahl' => [1,2],<br>
-'zusatzzahl' => [1,2],****
+'zusatzzahl' => [1,2],<br>
 'print' => 'no'
