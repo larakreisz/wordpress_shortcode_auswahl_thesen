@@ -356,8 +356,8 @@ if( $thesen_auswahl->have_posts() ):
 		// step 5: continue building the shortcode content
 		$probant_n_p = do_shortcode("[types field='probant-n-p'][/types]");
 		$color = '#000000';
-		if ($probant_n_p == 'n') {$color = '#008000';}
-        if ($probant_n_p == 'p') {$color = '#ff0000';}
+		if ($probant_n_p == 'n') {$color = '#ff0000';}
+        if ($probant_n_p == 'p') {$color = '#008000';}
 
 		$output .= '<div><span style="color:' . $color . '; font-weight:bold;">✓ Abgestimmt: '. $probant_n_p . '</span></div>';
 			
@@ -372,10 +372,10 @@ if( $thesen_auswahl->have_posts() ):
 	
 	// shortcode content ----> PRINT ------------------------------------------------------
 		$output .= '<div class="row" style="margin-top:20px;"><div class="col-md-1">'.$loop_nr.'</div><div class="col-md-8">'.do_shortcode("[types field='thesen-text'][/types]").'</div><div class="col-md-3"><div><input type="checkbox" disabled> Ich stimme zu</div><div><input type="checkbox" disabled> Ich stimme nicht zu</div></div></div>';
+
+	}
 	
 	$loop_nr += 1;
-		
-	}
 	
     	
 	endwhile;
